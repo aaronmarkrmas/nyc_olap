@@ -18,11 +18,18 @@ st.set_page_config(
 st.title("NYC Yellow Taxi OLAP Dashboard")
 st.caption("STADVDB MCO1 · June 2024 · Data source: nyc_taxi_dw")
 
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = int(os.getenv("DB_PORT", "3306"))
-DB_USER = os.getenv("DB_USER", "root")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "")
-DB_NAME = os.getenv("DB_NAME", "nyc_taxi_dw")
+def get_setting(name, default):
+    """Read Streamlit secrets first, then fall back to environment variables."""
+    if name in st.secrets:
+        return st.secrets[name]
+    return os.getenv(name, default)
+
+
+DB_HOST = get_setting("DB_HOST", "localhost")
+DB_PORT = int(get_setting("DB_PORT", "3306"))
+DB_USER = get_setting("DB_USER", "root")
+DB_PASSWORD = get_setting("DB_PASSWORD", "")
+DB_NAME = get_setting("DB_NAME", "nyc_taxi_dw")
 
 
 @st.cache_resource
